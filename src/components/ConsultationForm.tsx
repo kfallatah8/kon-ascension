@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, CheckCircle2, Sparkles } from "lucide-react";
 
 interface ConsultationFormProps {
   isOpen: boolean;
@@ -48,13 +48,13 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
   const prev = () => step > 1 && setStep(step - 1);
 
   const inputClass =
-    "w-full bg-secondary/50 border border-border rounded-xl px-4 py-3 text-foreground font-arabic text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 placeholder:text-muted-foreground";
+    "w-full bg-secondary/50 border border-border rounded-xl px-4 py-3 text-foreground font-arabic text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 placeholder:text-muted-foreground transition-all duration-300";
 
   const chipClass = (active: boolean) =>
-    `px-4 py-2 rounded-xl text-sm font-arabic cursor-pointer transition-all border ${
+    `px-4 py-2 rounded-xl text-sm font-arabic cursor-pointer transition-all duration-300 border ${
       active
-        ? "bg-primary/20 border-primary/50 text-foreground"
-        : "bg-secondary/30 border-border text-muted-foreground hover:border-primary/30"
+        ? "bg-primary/20 border-primary/50 text-foreground shadow-[0_0_15px_hsla(var(--glow),0.2)]"
+        : "bg-secondary/30 border-border text-muted-foreground hover:border-primary/30 hover:bg-secondary/50"
     }`;
 
   const renderStep = () => {
@@ -65,10 +65,15 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center py-12"
         >
-          <CheckCircle2 className="w-16 h-16 text-primary mx-auto mb-6" />
+          <div className="w-20 h-20 rounded-full gradient-primary flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_hsla(var(--glow),0.4)]">
+            <CheckCircle2 className="w-10 h-10 text-primary-foreground" />
+          </div>
           <h3 className="font-arabic text-2xl font-bold text-foreground mb-3">تم الإرسال بنجاح!</h3>
-          <p className="text-muted-foreground font-arabic" dir="rtl">
-            سنتواصل معك قريبًا لتحديد موعد الاستشارة.
+          <p className="text-muted-foreground font-arabic mb-2" dir="rtl">
+            سنتواصل معك قريبًا لتحديد موعد استشارتك المجانية.
+          </p>
+          <p className="text-primary/60 font-arabic text-sm" dir="rtl">
+            ✨ شكرًا لثقتك بنا
           </p>
         </motion.div>
       );
@@ -186,7 +191,7 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
         return (
           <div dir="rtl">
             <h3 className="font-arabic text-xl font-bold text-foreground mb-3">اختر موعدًا مناسبًا</h3>
-            <p className="text-sm text-muted-foreground font-arabic mb-6">اختر الوقت المناسب لك</p>
+            <p className="text-sm text-muted-foreground font-arabic mb-6">اختر الوقت المناسب لاستشارتك المجانية</p>
             <div className="grid grid-cols-2 gap-3">
               {[
                 "الأحد 10:00 ص",
@@ -222,7 +227,7 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           onClick={onClose}
         >
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-md" />
+          <div className="absolute inset-0 bg-background/85 backdrop-blur-md" />
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -232,9 +237,12 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-border/30">
-              <h2 className="font-display font-bold text-foreground">
-                <span className="gradient-text">KON</span> Diagnostic
-              </h2>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <h2 className="font-display font-bold text-foreground">
+                  <span className="gradient-text">KON</span> استشارة مجانية
+                </h2>
+              </div>
               <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
                 <X size={20} />
               </button>
@@ -247,11 +255,11 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
                   <span className="font-arabic">الخطوة {step} من {totalSteps}</span>
                   <span>{Math.round((step / totalSteps) * 100)}%</span>
                 </div>
-                <div className="h-1 bg-secondary rounded-full overflow-hidden">
+                <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full gradient-primary rounded-full"
+                    className="h-full rounded-full bg-gradient-to-r from-primary via-accent to-primary"
                     animate={{ width: `${(step / totalSteps) * 100}%` }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
                   />
                 </div>
               </div>
@@ -265,7 +273,7 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.25 }}
                 >
                   {renderStep()}
                 </motion.div>
@@ -285,10 +293,11 @@ const ConsultationForm = ({ isOpen, onClose }: ConsultationFormProps) => {
                 </button>
                 <button
                   onClick={next}
-                  className="gradient-primary text-primary-foreground px-6 py-2.5 rounded-xl text-sm font-arabic font-medium glow-button flex items-center gap-1"
+                  className="gradient-primary text-primary-foreground px-6 py-2.5 rounded-xl text-sm font-arabic font-medium glow-button flex items-center gap-1 relative overflow-hidden group"
                 >
-                  <span>{step === totalSteps ? "إرسال" : "التالي"}</span>
-                  <ChevronLeft size={16} />
+                  <span className="relative z-10">{step === totalSteps ? "إرسال" : "التالي"}</span>
+                  <ChevronLeft size={16} className="relative z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500" />
                 </button>
               </div>
             )}
